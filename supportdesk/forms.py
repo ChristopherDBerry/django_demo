@@ -1,24 +1,23 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
 
+class CustomSwitch(Field):
+    template = 'custom_switch.html'
 
-class RegisterForm(UserCreationForm):
+class ClientAddRequestForm(forms.Form):
+    summary = forms.CharField(label="Summary", max_length=100)
+    description = forms.CharField(label="Description", widget=forms.Textarea)
+    high_priority = forms.BooleanField(
+        label="Flag as high priority", required=False)
 
-    class Meta:
-        model = User
-        fields = (
-            "username",
-            "first_name",
-            "last_name",
-            "password1",
-            "password2",
-            "is_staff",
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Field('summary'),
+            Field('description'),
+            CustomSwitch('high_priority',
+                css_class="custom-control-input checkboxinput"),
+            Submit('submit', 'Create support request'),
         )
-
-
-class LoginForm(forms.Form):
-    username = forms.CharField(label="Your username", max_length=100)
-    password = forms.CharField(
-        label="Your password", max_length=100, widget=forms.PasswordInput()
-    )

@@ -1,8 +1,13 @@
-/* 
-/* 
-/*  custom.css
-/*
-/*  If not using Gulp and Sass, add your custom CSS below then include it
-/*  in your page by adding a reference to assets/css/custom.css in the head of each page.
-/*
-*/
+.form-group .custom-switch label.custom-control-label:before {
+  top: 0;
+}
+.form-group .custom-switch label.custom-control-label:after {
+  top: 0.25rem;
+}
+.asteriskField {
+    display: none;
+}
+.alert-tag {
+  display: inline-block;
+  min-width: 132px;
+}
