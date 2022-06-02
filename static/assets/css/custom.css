@@ -10,4 +10,5 @@
 .alert-tag {
   display: inline-block;
   min-width: 132px;
+  text-align: center;
 }

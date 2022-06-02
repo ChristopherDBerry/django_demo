@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags static request_tags %}
+{% block content %}
+<div class="navbar-container ">
+  <nav class="navbar navbar-expand-lg bg-white navbar-light position-fixed" data-sticky="top">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <img src="{% static "assets/img/ihorizon.png" %}" alt="ihorizon logo">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+
+<div class="container p-5">
+  <div class="row mb-5 mt-5">
+  </div>
+  <div class="row mt-5">
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h1 class="h3 mb-2">
+        All my open requests
+      </h1>
+    </div>
+  </div>
+  {% for request in requests %}
+  <div class="row justify-content-center mt-2 mb-4 border border-secondary">
+    <div class="col-md-12 p-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="h4"><a href="{% url 'supportdesk_staff_request_view' requestID=request.id %}">{{ request.summary }}</a></h2>
+        </div>
+        <div class="col-md-2">
+          {{ request.high_priority|request_priority_tag }}
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
+          {{ request.status|request_status_tag }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 p-1">
+          <p>{{ request.description }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 p-1">
+          <span class="btn btn-block btn-success">&#10003; Assigned to me</span>
+        </div>
+        <div class="col-md-3 p-1">
+          {% if request.status == "completed" %}
+          <span class="btn btn-block btn-success">&#10003; Completed</span>
+          {% else %}
+          <form action="/supportdesk/staff/complete" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="requestID" value="{{ request.id }}">
+            <input type="submit" class="btn btn-block btn-primary" value="&#10003; Mark as completed">
+          </form>
+          {% endif %}
+        </div>
+        <div class="col-md-6 p-1">
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="container p-5">
+  <div class="row mb-5 mt-5">
+  </div>
+  <div class="row mt-5">
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h1 class="h3 mb-2">
+        Other open requests
+      </h1>
+    </div>
+  </div>
+  {% for request in other_requests %}
+  <div class="row justify-content-center mt-2 mb-4 border border-secondary">
+    <div class="col-md-12 p-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="h4"><a href="{% url 'supportdesk_staff_request_view' requestID=request.id %}">{{ request.summary }}</a></h2>
+        </div>
+        <div class="col-md-2">
+          {{ request.high_priority|request_priority_tag }}
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
+          {{ request.status|request_status_tag }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 p-1">
+          <p>{{ request.description }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 p-1">
+          <h3 class="h5">Quick actions</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 p-1">
+          <form action="/supportdesk/staff/assign" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="requestID" value="{{ request.id }}">
+            <input type="submit" class="btn btn-block btn-secondary" value="Assign to me">
+          </form>
+        </div>
+        <div class="col-md-3 p-1">
+          {% if request.status == "completed" %}
+          <span class="btn btn-block btn-success">&#10003; Completed</span>
+          {% else %}
+          <form action="/supportdesk/staff/complete" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="requestID" value="{{ request.id }}">
+            <input type="submit" class="btn btn-block btn-primary" value="&#10003; Mark as completed">
+          </form>
+          {% endif %}
+        </div>
+        <div class="col-md-6 p-1">
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+<div class="container p-5">
+  <div class="row mb-5 mt-5">
+  </div>
+  <div class="row mt-5">
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <h1 class="h3 mb-2">
+        Closed requests
+      </h1>
+    </div>
+  </div>
+  {% for request in complete_requests %}
+  <div class="row justify-content-center mt-2 mb-4 border border-secondary">
+    <div class="col-md-12 p-4">
+      <div class="row">
+        <div class="col-md-6">
+          <h2 class="h4"><a href="{% url 'supportdesk_staff_request_view' requestID=request.id %}">{{ request.summary }}</a></h2>
+        </div>
+        <div class="col-md-2">
+          {{ request.high_priority|request_priority_tag }}
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-2">
+          {{ request.status|request_status_tag }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 p-1">
+          <p>{{ request.description }}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 p-1">
+          <h3 class="h5">Quick actions</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3 p-1">
+          <form action="/supportdesk/staff/assign" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="requestID" value="{{ request.id }}">
+            <input type="submit" class="btn btn-block btn-secondary" value="Assign to me">
+          </form>
+        </div>
+        <div class="col-md-3 p-1">
+          {% if request.status == "completed" %}
+          <span class="btn btn-block btn-success">&#10003; Completed</span>
+          {% else %}
+          <form action="/supportdesk/staff/complete" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="requestID" value="{{ request.id }}">
+            <input type="submit" class="btn btn-block btn-primary" value="&#10003; Mark as completed">
+          </form>
+          {% endif %}
+        </div>
+        <div class="col-md-6 p-1">
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

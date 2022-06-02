@@ -4,9 +4,9 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 
-from django.contrib.auth.mixins import (LoginRequiredMixin,
-    PermissionRequiredMixin)
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 
@@ -17,7 +17,7 @@ from .models import Request
 def home(request):
     """ redirect to appropriate dashbpard for user status """
     if request.user.is_staff:
-        return redirect("supportdesk_client_request_add") #XXX
+        return redirect("supportdesk_staff_request_list")
     else:
         return redirect("supportdesk_client_request_add")
 
@@ -56,5 +56,50 @@ class ClientRequestListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class StaffRequestListView(PermissionRequiredMixin, FormView):
-    permission_required = 'is_staff'
+@staff_member_required
+def assign_request(request):
+    requestID = request.POST["requestID"]
+    req = Request.objects.get(pk=requestID)
+    req.assigned_to = request.user
+    req.status = "in_progress"
+    req.save()
+    return redirect("supportdesk_home")
+
+
+@staff_member_required
+def complete_request(request):
+    requestID = request.POST["requestID"]
+    req = Request.objects.get(pk=requestID)
+    req.status = "completed"
+    req.save()
+    return redirect("supportdesk_home")
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class StaffRequestListView(TemplateView):
+    template_name = 'supportdesk/staff/list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        reqs = Request.objects.filter(assigned_to=self.request.user
+            ).exclude(status="completed")
+        context['requests'] = reqs
+        #XXX adding this so staff can assign themselves
+        #unassigned requests
+        other_reqs = Request.objects.exclude(assigned_to=self.request.user
+            ).exclude(status="completed")
+        context['other_requests'] = other_reqs
+        #XXX adding this to review completed requests
+        complete_reqs = Request.objects.filter(status="completed")
+        context['complete_requests'] = complete_reqs
+        return context
+
+
+@method_decorator(staff_member_required, name='dispatch')
+class StaffRequestView(TemplateView):
+    template_name = 'supportdesk/staff/view.html'
+
+    def get(self, request, requestID):
+        context = {}
+        context['request'] = Request.objects.get(pk=requestID)
+        return render(request, self.template_name, context)
