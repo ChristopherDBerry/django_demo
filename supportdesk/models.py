@@ -16,6 +16,7 @@ class Request(models.Model):
     requested = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=12,
         choices=STATUSES, default='pending')
+    high_priority = models.BooleanField(default=False)
     requestor = models.ForeignKey(User, on_delete=models.CASCADE, related_name = 'requestor')
     assigned_to = models.ForeignKey(User, blank=True, null=True,
         on_delete=models.SET_NULL, related_name = 'assigned_to')
