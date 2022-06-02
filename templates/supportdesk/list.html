@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags static %}
+{% load crispy_forms_tags static request_tags %}
 {% block content %}
 <div class="navbar-container ">
   <nav class="navbar navbar-expand-lg bg-white navbar-light position-fixed" data-sticky="top">
@@ -33,47 +33,51 @@
       </h1>
     </div>
   </div>
+  {% for request in requests %}
   <div class="row justify-content-center mt-2 mb-4 border border-secondary">
     <div class="col-md-12 p-4">
       <div class="row">
         <div class="col-md-6">
-          <h2 class="h4">Unable to login to app</h2>
+          <h2 class="h4">{{ request.summary }}</h2>
         </div>
         <div class="col-md-2">
-          <span class="alert alert-danger alert-tag">High priority</span>
+          {{ request.high_priority|request_priority_tag }}
         </div>
         <div class="col-md-2">
         </div>
         <div class="col-md-2">
-          <span class="alert alert-info alert-tag">In progress</span>
+          {{ request.status|request_status_tag }}
         </div>
       </div>
       <div class="row">
         <div class="col-md-12 p-1">
-          <p> Lorem ipsum whatever</p>
+          <p>{{ request.description }}</p>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4 p-1">
           <span>
             <img src="{% static "assets/img/icons/theme/home/clock.svg" %}" alt="user icon">
-            Created 3 days ago
+            {{ request.requested|request_created_text }}
           </span>
         </div>
-        <div class="col-md-8 p-1">
+        <div class="col-md-2 p-1">
+        </div>
+        <div class="col-md-6 p-1">
           <span>
             <img src="{% static "assets/img/icons/theme/general/user.svg" %}" alt="user icon">
+            {% if request.assigned_to %}
+            Assigned to {{ request.assigned_to.email }}
+            {% else %}
             Unassigned
+            {% endif %}
           </span>
         </div>
       </div>
     </div>
   </div>
-  <div class="row justify-content-center mt-2 mb-4">
-    <div class="col-md-8">
-      <div class="w-100 p-3 border border-secondary">Width 100%</div>
-    </div>
-  </div>
+  {% endfor %}
+
 </div>
 
 {% endblock %}

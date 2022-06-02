@@ -52,6 +52,7 @@ class ClientRequestListView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         reqs = Request.objects.filter(requestor=self.request.user)
         context['request_count'] = reqs.count()
+        context['requests'] = reqs
         return context
 
 
