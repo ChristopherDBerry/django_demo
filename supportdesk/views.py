@@ -18,8 +18,7 @@ def home(request):
     """ redirect to appropriate dashboard for user status """
     if request.user.is_staff:
         return redirect("supportdesk_staff_request_list")
-    else:
-        return redirect("supportdesk_client_request_add")
+    return redirect("supportdesk_client_request_add")
 
 
 class ClientRequestAddView(LoginRequiredMixin, FormView):
@@ -58,6 +57,7 @@ class ClientRequestListView(LoginRequiredMixin, TemplateView):
 
 @staff_member_required
 def assign_request(request):
+    """ requestID assigned to current user """
     requestID = request.POST["requestID"]
     req = Request.objects.get(pk=requestID)
     req.assigned_to = request.user
@@ -68,6 +68,7 @@ def assign_request(request):
 
 @staff_member_required
 def complete_request(request):
+    """ Set request status to completed """
     requestID = request.POST["requestID"]
     req = Request.objects.get(pk=requestID)
     req.status = "completed"
@@ -77,6 +78,7 @@ def complete_request(request):
 
 @method_decorator(staff_member_required, name='dispatch')
 class StaffRequestListView(TemplateView):
+    """ Staff requests view open and closed requests """
     template_name = 'supportdesk/staff/list.html'
 
     def get_context_data(self, *args, **kwargs):
@@ -97,6 +99,7 @@ class StaffRequestListView(TemplateView):
 
 @method_decorator(staff_member_required, name='dispatch')
 class StaffRequestView(TemplateView):
+    """ Individual request view """
     template_name = 'supportdesk/staff/view.html'
 
     def get(self, request, requestID):
