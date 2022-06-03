@@ -15,7 +15,7 @@ from .models import Request
 
 @login_required
 def home(request):
-    """ redirect to appropriate dashbpard for user status """
+    """ redirect to appropriate dashboard for user status """
     if request.user.is_staff:
         return redirect("supportdesk_staff_request_list")
     else:
