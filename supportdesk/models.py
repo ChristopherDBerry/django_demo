@@ -1,4 +1,4 @@
-"""dexter models"""
+"""supportdesk models"""
 
 from django.db import models
 from django.utils import timezone
@@ -11,6 +11,7 @@ STATUSES = (
 )
 
 class Request(models.Model):
+    """supportdesk client request model"""
     summary = models.CharField(default="", max_length=250, blank=True)
     description = models.TextField(blank=True, null=True)
     requested = models.DateTimeField(default=timezone.now)
