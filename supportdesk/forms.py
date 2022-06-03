@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, ButtonHolder, Submit
 
 class CustomSwitch(Field):
-    template = 'custom_switch.html'
+    template = 'supportdesk/custom_switch.html'
 
 class ClientAddRequestForm(forms.Form):
     summary = forms.CharField(label="Summary", max_length=100)
