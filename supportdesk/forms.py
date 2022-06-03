@@ -17,7 +17,6 @@ class ClientAddRequestForm(forms.Form):
         self.helper.layout = Layout(
             Field('summary'),
             Field('description'),
-            CustomSwitch('high_priority',
-                css_class="custom-control-input checkboxinput"),
+            CustomSwitch('high_priority'),
             Submit('submit', 'Create support request'),
         )
